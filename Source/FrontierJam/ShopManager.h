@@ -42,9 +42,6 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Economy|Utilities")
 	float UtilitiesCost;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Economy|Utilities")
-	float MaintenanceCost;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Economy|Rent")
 	float Rent;
 
@@ -53,7 +50,6 @@ public:
 	{
 		Cash = 100.f;
 		UtilitiesCost = 10.f;
-		MaintenanceCost = 0.f;
 		Rent = 10.f;
 	}
 
@@ -71,13 +67,22 @@ public:
 	EReputationState RepState;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Reputation|Variables")
-	uint8 Clealiness;
+	uint8 Cleanliness;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Reputation|Variables")
 	uint8 Decor;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Reputation")
 	int32 Reputation;
+
+	// Default Values to initiate Store
+	void init()
+	{
+		RepState = EReputationState::NEUTRAL;
+		Cleanliness = 5;
+		Decor = 0;
+		Reputation = (Cleanliness + Decor) * static_cast<int32>(RepState);
+	}
 
 };
 
@@ -90,10 +95,22 @@ class FRONTIERJAM_API AShopManager : public AInfo
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shop|Economy")
+
+	AShopManager();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shop")
 	FShopEconomy Economy;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shop|Reputation")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shop")
 	FShopReputation Reputation;
-	
+
+	UFUNCTION(BlueprintCallable)
+		void BuyItem(float cost);
+
+	UFUNCTION()
+		void UpdateUtilitiesCost(TArray<EMachineUpgrade> Machines, int NumMachines);
+
+	UFUNCTION()
+		void UpdateCleanliness(int8 update);
+
 };
