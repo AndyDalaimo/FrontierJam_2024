@@ -3,6 +3,7 @@
 #include "FrontierJamCharacter.h"
 #include "FrontierJamProjectile.h"
 #include "Animation/AnimInstance.h"
+#include "UObject/ConstructorHelpers.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "EnhancedInputComponent.h"
@@ -14,6 +15,7 @@
 
 AFrontierJamCharacter::AFrontierJamCharacter()
 {
+
 	// Character doesnt have a rifle at start
 	bHasRifle = false;
 	

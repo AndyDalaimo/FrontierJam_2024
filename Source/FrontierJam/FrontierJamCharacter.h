@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "FrontierJamProjectile.h"
 #include "InputActionValue.h"
 #include "FrontierJamCharacter.generated.h"
 
