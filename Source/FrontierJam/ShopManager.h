@@ -36,13 +36,13 @@ struct FShopEconomy
 
 public:
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Economy")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Economy")
 	float Cash;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Economy|Utilities")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Economy|Utilities")
 	float UtilitiesCost;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Economy|Rent")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Economy|Rent")
 	float Rent;
 
 	// Default Values to initiate Store
@@ -64,16 +64,16 @@ struct FShopReputation
 
 public:
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Reputation")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Reputation")
 	EReputationState RepState;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Reputation|Variables")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Reputation|Variables")
 	uint8 Cleanliness;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Reputation|Variables")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Reputation|Variables")
 	uint8 Decor;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Reputation")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Reputation")
 	int32 Reputation;
 
 	// Default Values to initiate Store
@@ -99,10 +99,10 @@ public:
 
 	AShopManager();
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shop")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shop")
 	FShopEconomy Economy;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shop")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shop")
 	FShopReputation Reputation;
 
 	UFUNCTION(BlueprintCallable)

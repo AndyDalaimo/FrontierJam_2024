@@ -27,8 +27,14 @@ public:
 	// Sets default values for this actor's properties
 	AWashingMachine();
 
+	UFUNCTION()
+		void UpgradeMachine();
+
 	UPROPERTY(EditDefaultsOnly, Category = "Machine|Upgrade")
 		int UpgradeCost;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Machine|Upgrade")
+		int UpgradeIncrease;
 
 protected:
 	// Called when the game starts or when spawned
@@ -55,9 +61,6 @@ private:
 	UShopDayCycle* GameInstanceRef;
 	AShopManager* ShopManagerRef;
 
+	// Mesh Instances for the Machine states
 	UStaticMesh* MachineMeshRef;
-
-
-	
-
 };

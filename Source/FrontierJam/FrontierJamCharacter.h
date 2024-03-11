@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "FrontierJamProjectile.h"
 #include "SpawnManager.h"
+#include "ShopManager.h"
 #include "ShopDayCycle.h"
 #include "InputActionValue.h"
 #include "FrontierJamCharacter.generated.h"
@@ -84,6 +85,7 @@ protected:
 
 	void SpawnNewMachine(ASpawnManager* SpawnManager);
 
+
 protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
@@ -97,7 +99,7 @@ public:
 
 private:
 	UShopDayCycle* GameInstanceRef;
-
+	AShopManager* ShopManagerRef;
 
 };
 

@@ -45,6 +45,7 @@ void AFrontierJamCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	GameInstanceRef = Cast<UShopDayCycle>(GetWorld()->GetGameInstance());
+	ShopManagerRef = Cast<AShopManager>(UGameplayStatics::GetActorOfClass(GetWorld(), AShopManager::StaticClass()));
 
 	//Add Input Mapping Context
 	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
@@ -130,16 +131,24 @@ void AFrontierJamCharacter::Interact(const FInputActionValue& Value)
 		}
 	}
 
-	DrawDebugLine(GetWorld(), Start, End, FColor::Red, true, 5.0f, 0, .5f);
+	DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 5.0f, 0, .5f);
 }
 
 
 // Spawn New machine if Player has enough funds and is on Night Cycle
 void AFrontierJamCharacter::SpawnNewMachine(ASpawnManager* SpawnManager)
 {
-	UE_LOG(LogTemp, Display, TEXT("Attempting to spawn Machine"));
-	SpawnManager->SpawnNewMachine();
-	SpawnManager->Destroy();
+	if (ShopManagerRef->Economy.Cash >= 150)
+	{
+		UE_LOG(LogTemp, Display, TEXT("Attempting to spawn Machine"));
+		SpawnManager->SpawnNewMachine();
+		SpawnManager->Destroy();
+		ShopManagerRef->BuyItem(150.f);
+	}
+	else {
+		UE_LOG(LogTemp, Display, TEXT("Not Enough CASH"));
+	}
+
 }
 
 void AFrontierJamCharacter::SetHasRifle(bool bNewHasRifle)

@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-// #include "FrontierJamCharacter.h"
 #include "WashingMachine.h"
 #include "ShopDayCycle.h"
 #include "Components/BoxComponent.h"

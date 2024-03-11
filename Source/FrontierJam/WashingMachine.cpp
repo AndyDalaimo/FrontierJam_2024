@@ -6,7 +6,7 @@
 #include "UObject/ConstructorHelpers.h"
 
 // Sets default values
-AWashingMachine::AWashingMachine() : UpgradeCost(100), UpgradeState(EMachineUpgrade::SMALL)
+AWashingMachine::AWashingMachine() : UpgradeCost(100), UpgradeIncrease(250), UpgradeState(EMachineUpgrade::SMALL)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -21,9 +21,11 @@ AWashingMachine::AWashingMachine() : UpgradeCost(100), UpgradeState(EMachineUpgr
 	
 	MachineCollisionComp = CreateDefaultSubobject<UBoxComponent>(TEXT("MachineCollisionComp"));
 	MachineCollisionComp->AttachToComponent(MachineMesh, FAttachmentTransformRules::KeepRelativeTransform);
+	MachineCollisionComp->SetBoxExtent(FVector(100.0, 100.0, 100.0));
 	MachineCollisionComp->OnComponentBeginOverlap.AddDynamic(this, &AWashingMachine::PlayerInteractionOnOverlap);
 
 }
+
 
 // Called when the game starts or when spawned
 void AWashingMachine::BeginPlay()
@@ -53,12 +55,39 @@ void AWashingMachine::PlayerInteractionOnOverlap(UPrimitiveComponent* Overlapped
 				break;
 			case (EGameState::NIGHT) :
 				UE_LOG(LogTemp, Display, TEXT("Allow Player Interaction: Night Cycle"));
+				// TESTING
+				UpgradeMachine();
 				break;
 			default :
 				UE_LOG(LogTemp, Display, TEXT("Allow Player Interaction: Default"));
 		}
 	}	
 }
+
+
+// Upgrade Machine and subtract from Economy
+void AWashingMachine::UpgradeMachine()
+{
+
+	// Update new upgrade cost and State
+	switch (UpgradeState)
+	{
+		case (EMachineUpgrade::SMALL) :
+			UpgradeState = EMachineUpgrade::MEDIUM;
+			UpgradeCost += UpgradeIncrease;
+			ShopManagerRef->BuyItem(UpgradeCost); 
+			UE_LOG(LogTemp, Display, TEXT("Upgraded Machine"));
+			break;
+		case (EMachineUpgrade::MEDIUM) :
+			UpgradeState = EMachineUpgrade::LARGE;
+			UpgradeCost += UpgradeIncrease;
+			ShopManagerRef->BuyItem(UpgradeCost);
+			UE_LOG(LogTemp, Display, TEXT("Upgraded Machine"));
+			break;
+	}
+
+}
+
 
 // Called every frame
 void AWashingMachine::Tick(float DeltaTime)
