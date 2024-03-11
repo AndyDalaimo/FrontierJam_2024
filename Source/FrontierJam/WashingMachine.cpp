@@ -3,13 +3,20 @@
 
 #include "WashingMachine.h"
 
+#include "UObject/ConstructorHelpers.h"
+
 // Sets default values
 AWashingMachine::AWashingMachine() : UpgradeCost(100), UpgradeState(EMachineUpgrade::SMALL)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	static ConstructorHelpers::FObjectFinder<UStaticMesh>MachineMeshAsset(TEXT("/Game/StarterContent/Shapes/Shape_Cone"));
+	MachineMeshRef = MachineMeshAsset.Object;
+
 	MachineMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MachineMesh"));
+	MachineMesh->SetStaticMesh(MachineMeshRef);
+
 	RootComponent = MachineMesh;
 	
 	MachineCollisionComp = CreateDefaultSubobject<UBoxComponent>(TEXT("MachineCollisionComp"));
@@ -24,7 +31,6 @@ void AWashingMachine::BeginPlay()
 	Super::BeginPlay();
 
 	// Set references 
-	PawnRef = Cast<AFrontierJamCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());
 	ShopManagerRef = Cast<AShopManager>(UGameplayStatics::GetActorOfClass(GetWorld(), AShopManager::StaticClass()));
 	GameInstanceRef = Cast<UShopDayCycle>(GetWorld()->GetGameInstance());
 }
@@ -38,7 +44,7 @@ void AWashingMachine::PlayerInteractionOnOverlap(UPrimitiveComponent* Overlapped
 	bool bFromSweep, 
 	const FHitResult& SweepResult)
 {
-	if (OtherActor == PawnRef && OtherComp)
+	if (OtherActor != this && OtherComp)
 	{
 		switch (GameInstanceRef->GameState)
 		{

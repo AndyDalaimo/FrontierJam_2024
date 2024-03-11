@@ -6,7 +6,7 @@
 
 
 
-UShopDayCycle::UShopDayCycle(const FObjectInitializer& ObjectInitializer) : dayCycleTime(10), timerRate(0.f), GameState(EGameState::DAY)
+UShopDayCycle::UShopDayCycle(const FObjectInitializer& ObjectInitializer) : dayCycleTime(10), timerRate(1.f), GameState(EGameState::DAY)
 {
 
 }

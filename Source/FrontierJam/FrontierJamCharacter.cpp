@@ -44,6 +44,8 @@ void AFrontierJamCharacter::BeginPlay()
 	// Call the base class  
 	Super::BeginPlay();
 
+	GameInstanceRef = Cast<UShopDayCycle>(GetWorld()->GetGameInstance());
+
 	//Add Input Mapping Context
 	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
 	{
@@ -68,6 +70,10 @@ void AFrontierJamCharacter::SetupPlayerInputComponent(class UInputComponent* Pla
 
 		//Moving
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AFrontierJamCharacter::Move);
+
+		//Interact
+		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &AFrontierJamCharacter::Interact);
+
 
 		//Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AFrontierJamCharacter::Look);
@@ -99,6 +105,41 @@ void AFrontierJamCharacter::Look(const FInputActionValue& Value)
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+}
+
+void AFrontierJamCharacter::Interact(const FInputActionValue& Value)
+{
+	FVector Start = GetActorLocation() + FVector(0,0,50);
+	FVector End = Start + FirstPersonCameraComponent->GetForwardVector() * 300.f;
+	FString SpawnString = "SpawnMesh";
+
+	FHitResult HitResult;
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(this);
+
+	if (GetWorld()->LineTraceSingleByChannel(HitResult, Start, End,
+		ECollisionChannel::ECC_Visibility, Params, FCollisionResponseParams()) && HitResult.GetActor()->IsValidLowLevel())
+	{
+		for (UActorComponent* comp : HitResult.GetActor()->GetComponents())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Player Interact: %s"), *comp->GetName());
+			if (*comp->GetName() == SpawnString)
+			{
+				if (GameInstanceRef->GameState == EGameState::NIGHT) SpawnNewMachine((ASpawnManager*)HitResult.GetActor());
+			}
+		}
+	}
+
+	DrawDebugLine(GetWorld(), Start, End, FColor::Red, true, 5.0f, 0, .5f);
+}
+
+
+// Spawn New machine if Player has enough funds and is on Night Cycle
+void AFrontierJamCharacter::SpawnNewMachine(ASpawnManager* SpawnManager)
+{
+	UE_LOG(LogTemp, Display, TEXT("Attempting to spawn Machine"));
+	SpawnManager->SpawnNewMachine();
+	SpawnManager->Destroy();
 }
 
 void AFrontierJamCharacter::SetHasRifle(bool bNewHasRifle)

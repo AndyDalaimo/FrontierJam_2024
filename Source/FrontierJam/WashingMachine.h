@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/BoxComponent.h"
-#include "FrontierJamCharacter.h"
 #include "ShopDayCycle.h"
 #include "ShopManager.h"
 #include "Kismet/GameplayStatics.h"
@@ -53,9 +52,10 @@ public:
 private:
 
 	// References to World Objects
-	AFrontierJamCharacter* PawnRef;
 	UShopDayCycle* GameInstanceRef;
 	AShopManager* ShopManagerRef;
+
+	UStaticMesh* MachineMeshRef;
 
 
 	

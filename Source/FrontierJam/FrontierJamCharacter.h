@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "FrontierJamProjectile.h"
+#include "SpawnManager.h"
+#include "ShopDayCycle.h"
 #include "InputActionValue.h"
 #include "FrontierJamCharacter.generated.h"
 
@@ -40,6 +42,10 @@ class AFrontierJamCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	class UInputAction* MoveAction;
 
+	// Interact Input Action
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+		class UInputAction* InteractAction;
+
 	
 public:
 	AFrontierJamCharacter();
@@ -66,11 +72,17 @@ public:
 	bool GetHasRifle();
 
 protected:
+
 	/** Called for movement input */
 	void Move(const FInputActionValue& Value);
 
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
+
+	// Called for Interact Input
+	void Interact(const FInputActionValue& Value);
+
+	void SpawnNewMachine(ASpawnManager* SpawnManager);
 
 protected:
 	// APawn interface
@@ -82,6 +94,9 @@ public:
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 	/** Returns FirstPersonCameraComponent subobject **/
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
+
+private:
+	UShopDayCycle* GameInstanceRef;
 
 
 };

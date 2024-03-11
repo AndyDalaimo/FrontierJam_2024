@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "Blueprint/UserWidget.h"
 #include "ShopDayCycle.generated.h"
 
 
