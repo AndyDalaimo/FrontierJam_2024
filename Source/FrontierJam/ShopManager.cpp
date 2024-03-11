@@ -44,3 +44,27 @@ void AShopManager::UpdateCleanliness(int8 update)
 {
 	Reputation.Cleanliness += update;
 }
+
+void AShopManager::UpdateReputation()
+{
+	Reputation.Reputation = (Reputation.Cleanliness + Reputation.Decor) * static_cast<int32>(Reputation.RepState);
+
+
+	// Change this later. Is ugly
+	if (Reputation.Reputation > 10)
+	{
+		Reputation.RepState = EReputationState::POSITIVE;
+	}
+	else if (Reputation.Reputation > 20)
+	{
+		Reputation.RepState = EReputationState::EXCELLENT;
+	}
+	else if (Reputation.Reputation <= 10)
+	{
+		Reputation.RepState = EReputationState::NEUTRAL;
+	}
+	else {
+		Reputation.RepState = EReputationState::NEGATIVE;
+	}
+}
+

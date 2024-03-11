@@ -6,6 +6,7 @@
 #include "GameFramework/Info.h"
 #include "ShopManager.generated.h"
 
+
 // Machine Upgrade states
 UENUM(BlueprintType)
 enum class EMachineUpgrade : uint8
@@ -14,7 +15,6 @@ enum class EMachineUpgrade : uint8
 	MEDIUM = 1 UMETA(DisplayName = "Medium"),
 	LARGE = 2 UMETA(DisplayName = "Large"),
 };
-
 
 // Enum State tracker to influence UI Reviews and Store efficiency/Cleanliness
 UENUM(BlueprintType)
@@ -56,6 +56,7 @@ public:
 };
 
 // Store Reputation influenced by Player's actions in the game
+// TODO -- Might have to add an efficiency Variable here 
 USTRUCT(BlueprintType)
 struct FShopReputation
 {
@@ -112,5 +113,8 @@ public:
 
 	UFUNCTION()
 		void UpdateCleanliness(int8 update);
+
+	UFUNCTION()
+		void UpdateReputation();
 
 };
