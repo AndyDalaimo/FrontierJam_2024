@@ -32,7 +32,7 @@ void ALaundryBag::Launch(FVector LaunchDir)
 {
 	this->DetachRootComponentFromParent(true);
 	LaundryMesh->SetSimulatePhysics(true);
-	LaundryMesh->AddImpulse(LaunchDir * 50000);
+	LaundryMesh->AddImpulse(LaunchDir);
 	
 }
 
