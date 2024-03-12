@@ -4,7 +4,6 @@
 #include "LaundryBag.h"
 
 #include "UObject/ConstructorHelpers.h"
-#include "TimerManager.h"
 
 // Sets default values
 ALaundryBag::ALaundryBag()

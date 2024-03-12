@@ -28,7 +28,7 @@ void UShopDayCycle::InitializeDayCycle()
 void UShopDayCycle::DayCycle()
 {
 	timeElapsed++;
-	UE_LOG(LogTemp, Display, TEXT("Seconds elapsed: %f"), timeElapsed);
+	// UE_LOG(LogTemp, Display, TEXT("Seconds elapsed: %f"), timeElapsed);
 
 	if (timeElapsed >= dayCycleTime)
 	{

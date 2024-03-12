@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Interfaces/IPhysicsComponent.h"
-#include "Kismet/GameplayStatics.h"
 #include "LaundryBag.generated.h"
 
 UCLASS()
@@ -36,8 +35,5 @@ public:
 private:
 	UStaticMesh* LaundryMeshAsset;
 
-	// Properties for in Launch timer
-	FTimerHandle LaunchTimer;
-	FTimerDelegate TimerDelegate;
 
 };

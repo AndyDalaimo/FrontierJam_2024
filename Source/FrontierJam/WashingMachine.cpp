@@ -4,9 +4,10 @@
 #include "WashingMachine.h"
 
 #include "UObject/ConstructorHelpers.h"
+#include "TimerManager.h"
 
 // Sets default values
-AWashingMachine::AWashingMachine() : UpgradeCost(100), UpgradeIncrease(250), UpgradeState(EMachineUpgrade::SMALL)
+AWashingMachine::AWashingMachine() : UpgradeCost(100), UpgradeIncrease(250), UpgradeState(EMachineUpgrade::SMALL), WashCycleTime(5), bWashing(false)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -21,8 +22,8 @@ AWashingMachine::AWashingMachine() : UpgradeCost(100), UpgradeIncrease(250), Upg
 	
 	MachineCollisionComp = CreateDefaultSubobject<UBoxComponent>(TEXT("MachineCollisionComp"));
 	MachineCollisionComp->AttachToComponent(MachineMesh, FAttachmentTransformRules::KeepRelativeTransform);
-	MachineCollisionComp->SetBoxExtent(FVector(100.0, 100.0, 100.0));
-	MachineCollisionComp->OnComponentBeginOverlap.AddDynamic(this, &AWashingMachine::PlayerInteractionOnOverlap);
+	MachineCollisionComp->SetBoxExtent(FVector(32.0, 32.0, 32.0));
+	MachineCollisionComp->OnComponentBeginOverlap.AddDynamic(this, &AWashingMachine::MachineWashOnOverlap);
 
 }
 
@@ -35,33 +36,43 @@ void AWashingMachine::BeginPlay()
 	// Set references 
 	ShopManagerRef = Cast<AShopManager>(UGameplayStatics::GetActorOfClass(GetWorld(), AShopManager::StaticClass()));
 	GameInstanceRef = Cast<UShopDayCycle>(GetWorld()->GetGameInstance());
+
+	// Bind Timer Function
+	TimerDelegate.BindUFunction(this, "WashCycle");
 }
 
 // When Pawn is in range of this machine, allow them to purchase an upgrade during night cycle, 
 // and use the machine during the day cycle
-void AWashingMachine::PlayerInteractionOnOverlap(UPrimitiveComponent* OverlappedComponent, 
+void AWashingMachine::MachineWashOnOverlap(UPrimitiveComponent* OverlappedComponent,
 	AActor* OtherActor, 
 	UPrimitiveComponent* OtherComp, 
 	int32 OtherBodyIndex, 
 	bool bFromSweep, 
 	const FHitResult& SweepResult)
 {
-	if (OtherActor != this && OtherComp)
+	ALaundryBag* Bag = Cast<ALaundryBag>(OtherActor);
+	if (OtherActor != this && Bag != nullptr && GameInstanceRef->GameState == EGameState::DAY && !bWashing)
 	{
-		switch (GameInstanceRef->GameState)
-		{
-			case (EGameState::DAY) :
-				UE_LOG(LogTemp, Display, TEXT("Allow Player Interaction: Day Cycle"));
-				break;
-			case (EGameState::NIGHT) :
-				UE_LOG(LogTemp, Display, TEXT("Allow Player Interaction: Night Cycle"));
-				// TESTING
-				// UpgradeMachine();
-				break;
-			default :
-				UE_LOG(LogTemp, Display, TEXT("Allow Player Interaction: Default"));
-		}
+		bWashing = true;
+		washTimeElapsed = 0;
+		GetWorld()->GetTimerManager().SetTimer(WashTimer, TimerDelegate, timerRate, true);
+		Bag->Destroy();
 	}	
+}
+
+// Start Wash Cycle for this machine
+// On end, Update Economy and Reputation
+void AWashingMachine::WashCycle()
+{
+	washTimeElapsed++;
+	UE_LOG(LogTemp, Display, TEXT("Wash Time elapsed: %f"), washTimeElapsed);
+
+	if (washTimeElapsed >= WashCycleTime)
+	{
+		GameInstanceRef->GetTimerManager().ClearTimer(WashTimer);
+		bWashing = false;
+		ShopManagerRef->Economy.Cash += WashReward;
+	}
 }
 
 
@@ -78,11 +89,13 @@ void AWashingMachine::UpgradeMachine()
 				UE_LOG(LogTemp, Display, TEXT("Upgrading Machine: Small to medium"));
 				ShopManagerRef->BuyItem(UpgradeCost); 
 				UpgradeState = EMachineUpgrade::MEDIUM;
+				WashReward += WashReward_Increase;
 				break;
 			case (EMachineUpgrade::MEDIUM) :
 				UE_LOG(LogTemp, Display, TEXT("Upgrading Machine: Medium to Large"));
 				ShopManagerRef->BuyItem(UpgradeCost);
 				UpgradeState = EMachineUpgrade::LARGE;
+				WashReward += WashReward_Increase;
 				break;
 		}
 	}
