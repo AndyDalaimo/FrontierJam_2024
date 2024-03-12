@@ -13,7 +13,7 @@
 //////////////////////////////////////////////////////////////////////////
 // AFrontierJamCharacter
 
-AFrontierJamCharacter::AFrontierJamCharacter()
+AFrontierJamCharacter::AFrontierJamCharacter() : ThrowPower(25000)
 {
 
 	// Character doesnt have a rifle at start
@@ -192,7 +192,7 @@ void AFrontierJamCharacter::LaunchItem()
 	if (LaundryRef != nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Attempting to Launch this Laundry Bag: %s"), *LaundryRef->GetName());
-		LaundryRef->Launch(Start);
+		LaundryRef->Launch(Start * ThrowPower);
 		bHasPickup = false;
 	}
 	else {
