@@ -56,7 +56,7 @@ void AWashingMachine::PlayerInteractionOnOverlap(UPrimitiveComponent* Overlapped
 			case (EGameState::NIGHT) :
 				UE_LOG(LogTemp, Display, TEXT("Allow Player Interaction: Night Cycle"));
 				// TESTING
-				UpgradeMachine();
+				// UpgradeMachine();
 				break;
 			default :
 				UE_LOG(LogTemp, Display, TEXT("Allow Player Interaction: Default"));
@@ -68,23 +68,29 @@ void AWashingMachine::PlayerInteractionOnOverlap(UPrimitiveComponent* Overlapped
 // Upgrade Machine and subtract from Economy
 void AWashingMachine::UpgradeMachine()
 {
-
-	// Update new upgrade cost and State
-	switch (UpgradeState)
+	if (ShopManagerRef->Economy.Cash >= UpgradeCost)
 	{
-		case (EMachineUpgrade::SMALL) :
-			UpgradeState = EMachineUpgrade::MEDIUM;
-			UpgradeCost += UpgradeIncrease;
-			ShopManagerRef->BuyItem(UpgradeCost); 
-			UE_LOG(LogTemp, Display, TEXT("Upgraded Machine"));
-			break;
-		case (EMachineUpgrade::MEDIUM) :
-			UpgradeState = EMachineUpgrade::LARGE;
-			UpgradeCost += UpgradeIncrease;
-			ShopManagerRef->BuyItem(UpgradeCost);
-			UE_LOG(LogTemp, Display, TEXT("Upgraded Machine"));
-			break;
+		UpgradeCost += UpgradeIncrease;
+		// Update new upgrade cost and State
+		switch (UpgradeState)
+		{
+			case (EMachineUpgrade::SMALL) :
+				UE_LOG(LogTemp, Display, TEXT("Upgrading Machine: Small to medium"));
+				ShopManagerRef->BuyItem(UpgradeCost); 
+				UpgradeState = EMachineUpgrade::MEDIUM;
+				break;
+			case (EMachineUpgrade::MEDIUM) :
+				UE_LOG(LogTemp, Display, TEXT("Upgrading Machine: Medium to Large"));
+				ShopManagerRef->BuyItem(UpgradeCost);
+				UpgradeState = EMachineUpgrade::LARGE;
+				break;
+		}
 	}
+	else {
+		UE_LOG(LogTemp, Display, TEXT("Not enough money to upgrade Machine"));
+
+	}
+
 
 }
 

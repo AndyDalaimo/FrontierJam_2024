@@ -18,7 +18,8 @@ AShopManager::AShopManager()
 // Buy Item: Subtract from total Cash in Economy
 void AShopManager::BuyItem(float cost)
 {
-	Economy.Cash -= cost;
+	if (Economy.Cash >= cost) Economy.Cash -= cost;
+	else UE_LOG(LogTemp, Warning, TEXT("Can't Buy that!"));
 }
 
 // 

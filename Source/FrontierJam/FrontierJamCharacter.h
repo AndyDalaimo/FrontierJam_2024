@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "FrontierJamProjectile.h"
 #include "SpawnManager.h"
+#include "WashingMachine.h"
 #include "ShopManager.h"
 #include "ShopDayCycle.h"
 #include "InputActionValue.h"
@@ -85,6 +86,8 @@ protected:
 
 	void SpawnNewMachine(ASpawnManager* SpawnManager);
 
+	void UpgradeThisMachine(AWashingMachine* MachineToUpgrade);
+
 
 protected:
 	// APawn interface
@@ -100,6 +103,9 @@ public:
 private:
 	UShopDayCycle* GameInstanceRef;
 	AShopManager* ShopManagerRef;
+
+	FString SpawnString = "SpawnMesh";
+	FString MachineString = "MachineMesh";
 
 };
 

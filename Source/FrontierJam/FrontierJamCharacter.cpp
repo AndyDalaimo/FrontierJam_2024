@@ -112,7 +112,6 @@ void AFrontierJamCharacter::Interact(const FInputActionValue& Value)
 {
 	FVector Start = GetActorLocation() + FVector(0,0,50);
 	FVector End = Start + FirstPersonCameraComponent->GetForwardVector() * 300.f;
-	FString SpawnString = "SpawnMesh";
 
 	FHitResult HitResult;
 	FCollisionQueryParams Params;
@@ -124,9 +123,16 @@ void AFrontierJamCharacter::Interact(const FInputActionValue& Value)
 		for (UActorComponent* comp : HitResult.GetActor()->GetComponents())
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Player Interact: %s"), *comp->GetName());
-			if (*comp->GetName() == SpawnString)
+
+			if (*comp->GetName() == SpawnString && GameInstanceRef->GameState == EGameState::NIGHT)
 			{
-				if (GameInstanceRef->GameState == EGameState::NIGHT) SpawnNewMachine((ASpawnManager*)HitResult.GetActor());
+				SpawnNewMachine((ASpawnManager*)HitResult.GetActor());
+			}
+			else if (*comp->GetName() == MachineString && GameInstanceRef->GameState == EGameState::NIGHT)
+			{
+				// Add Upgrade Machine function here
+				// UE_LOG(LogTemp, Warning, TEXT("Attempting to Upgrade this machine"));
+				UpgradeThisMachine((AWashingMachine*)HitResult.GetActor());
 			}
 		}
 	}
@@ -138,9 +144,8 @@ void AFrontierJamCharacter::Interact(const FInputActionValue& Value)
 // Spawn New machine if Player has enough funds and is on Night Cycle
 void AFrontierJamCharacter::SpawnNewMachine(ASpawnManager* SpawnManager)
 {
-	if (ShopManagerRef->Economy.Cash >= 150)
+	if (ShopManagerRef->Economy.Cash >= 150.f)
 	{
-		UE_LOG(LogTemp, Display, TEXT("Attempting to spawn Machine"));
 		SpawnManager->SpawnNewMachine();
 		SpawnManager->Destroy();
 		ShopManagerRef->BuyItem(150.f);
@@ -149,6 +154,13 @@ void AFrontierJamCharacter::SpawnNewMachine(ASpawnManager* SpawnManager)
 		UE_LOG(LogTemp, Display, TEXT("Not Enough CASH"));
 	}
 
+}
+
+// Attempt to upgrade the machine Player is interacting with
+void AFrontierJamCharacter::UpgradeThisMachine(AWashingMachine* MachineToUpgrade)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Attempting to Upgrade this machine"));
+	MachineToUpgrade->UpgradeMachine();
 }
 
 void AFrontierJamCharacter::SetHasRifle(bool bNewHasRifle)
