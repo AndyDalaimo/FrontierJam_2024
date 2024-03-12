@@ -7,9 +7,12 @@
 #include "FrontierJamProjectile.h"
 #include "SpawnManager.h"
 #include "WashingMachine.h"
+#include "LaundryBag.h"
 #include "ShopManager.h"
 #include "ShopDayCycle.h"
+#include "Components/ArrowComponent.h"
 #include "InputActionValue.h"
+
 #include "FrontierJamCharacter.generated.h"
 
 class UInputComponent;
@@ -48,6 +51,9 @@ class AFrontierJamCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 		class UInputAction* InteractAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Pickup, meta = (AllowPrivateAccess = "true"))
+		class UArrowComponent* PickupComponent;
+
 	
 public:
 	AFrontierJamCharacter();
@@ -84,9 +90,11 @@ protected:
 	// Called for Interact Input
 	void Interact(const FInputActionValue& Value);
 
+	// Interact Functions for each Different 
 	void SpawnNewMachine(ASpawnManager* SpawnManager);
-
 	void UpgradeThisMachine(AWashingMachine* MachineToUpgrade);
+	void PickupItem(ALaundryBag* Pickup);
+	void LaunchItem();
 
 
 protected:
@@ -103,9 +111,16 @@ public:
 private:
 	UShopDayCycle* GameInstanceRef;
 	AShopManager* ShopManagerRef;
+	ALaundryBag* LaundryRef;
 
+	// Components for Player interacting to look out for
 	FString SpawnString = "SpawnMesh";
 	FString MachineString = "MachineMesh";
+	FString LaundryString = "LaundryMesh";
+
+	// Tell Interaction if player is holding item to throw
+	bool bHasPickup;
+
 
 };
 

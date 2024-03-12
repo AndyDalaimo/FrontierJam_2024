@@ -18,6 +18,7 @@ AFrontierJamCharacter::AFrontierJamCharacter()
 
 	// Character doesnt have a rifle at start
 	bHasRifle = false;
+	bHasPickup = false;
 	
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
@@ -36,6 +37,10 @@ AFrontierJamCharacter::AFrontierJamCharacter()
 	Mesh1P->CastShadow = false;
 	//Mesh1P->SetRelativeRotation(FRotator(0.9f, -19.19f, 5.2f));
 	Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
+
+	// Pickup Component: Laundry bag to throw
+	PickupComponent = CreateDefaultSubobject<UArrowComponent>(TEXT("PickupComponent"));
+	PickupComponent->SetupAttachment(RootComponent);
 
 }
 
@@ -117,9 +122,10 @@ void AFrontierJamCharacter::Interact(const FInputActionValue& Value)
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(this);
 
-	if (GetWorld()->LineTraceSingleByChannel(HitResult, Start, End,
+	if (!bHasPickup && GetWorld()->LineTraceSingleByChannel(HitResult, Start, End,
 		ECollisionChannel::ECC_Visibility, Params, FCollisionResponseParams()) && HitResult.GetActor()->IsValidLowLevel())
 	{
+
 		for (UActorComponent* comp : HitResult.GetActor()->GetComponents())
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Player Interact: %s"), *comp->GetName());
@@ -134,10 +140,18 @@ void AFrontierJamCharacter::Interact(const FInputActionValue& Value)
 				// UE_LOG(LogTemp, Warning, TEXT("Attempting to Upgrade this machine"));
 				UpgradeThisMachine((AWashingMachine*)HitResult.GetActor());
 			}
-		}
+			else if (*comp->GetName() == LaundryString && GameInstanceRef->GameState == EGameState::DAY)
+			{
+				PickupItem((ALaundryBag*)HitResult.GetActor());
+			}
+		}	
+		DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 5.0f, 0, .5f);
+	}
+	else if (bHasPickup)
+	{
+		LaunchItem();
 	}
 
-	DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 5.0f, 0, .5f);
 }
 
 
@@ -161,6 +175,30 @@ void AFrontierJamCharacter::UpgradeThisMachine(AWashingMachine* MachineToUpgrade
 {
 	UE_LOG(LogTemp, Warning, TEXT("Attempting to Upgrade this machine"));
 	MachineToUpgrade->UpgradeMachine();
+}
+
+void AFrontierJamCharacter::PickupItem(ALaundryBag* Pickup)
+{
+	LaundryRef = Pickup;
+	LaundryRef->LaundryMesh->SetSimulatePhysics(false);
+	LaundryRef->AttachToComponent(PickupComponent, FAttachmentTransformRules::SnapToTargetIncludingScale);
+	bHasPickup = true;
+}
+
+void AFrontierJamCharacter::LaunchItem()
+{
+	FVector Start = FirstPersonCameraComponent->GetForwardVector();
+	// FVector LaunchDir = Start + GetActorForwardVector();
+	if (LaundryRef != nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Attempting to Launch this Laundry Bag: %s"), *LaundryRef->GetName());
+		LaundryRef->Launch(Start);
+		bHasPickup = false;
+	}
+	else {
+		UE_LOG(LogTemp, Warning, TEXT("Actor Not Valid"));
+	}
+
 }
 
 void AFrontierJamCharacter::SetHasRifle(bool bNewHasRifle)
