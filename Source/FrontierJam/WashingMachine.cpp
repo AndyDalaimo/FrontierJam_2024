@@ -56,6 +56,9 @@ void AWashingMachine::MachineWashOnOverlap(UPrimitiveComponent* OverlappedCompon
 	ALaundryBag* Bag = Cast<ALaundryBag>(OtherActor);
 	if (OtherActor != this && Bag != nullptr && GameInstanceRef->GameState == EGameState::DAY && !bWashing)
 	{
+		// Trigger Blueprint event (Anims, etc.)
+		K2_StartWashCycle();
+		
 		bWashing = true;
 		washTimeElapsed = 0;
 		GetWorld()->GetTimerManager().SetTimer(WashTimer, TimerDelegate, timerRate, true);
@@ -72,6 +75,9 @@ void AWashingMachine::WashCycle()
 
 	if (washTimeElapsed >= WashCycleTime)
 	{
+		// Trigger Blueprint event (Anims, etc.)
+		K2_EndWashCycle();
+		
 		GameInstanceRef->GetTimerManager().ClearTimer(WashTimer);
 		bWashing = false;
 		ShopManagerRef->Economy.Cash += WashReward;
