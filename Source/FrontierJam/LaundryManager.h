@@ -6,6 +6,7 @@
 #include "GameFramework/Info.h"
 #include "LaundryBag.h"
 #include "ShopDayCycle.h"
+#include "ShopManager.h"
 #include "Kismet/GameplayStatics.h"
 #include "LaundryManager.generated.h"
 
@@ -41,11 +42,18 @@ protected:
 	UFUNCTION(BlueprintCallable)
 		FVector GetLaundrySpawnLocation();
 
+	UFUNCTION(BLueprintCallable)
+		void ReputationUpdate();
+
+	UFUNCTION(BlueprintCallable)
+		void DestroyAllLeftoverBags();
+
 private:
 
 	FActorSpawnParameters params;
 
 	UShopDayCycle* GameInstanceRef;
+	AShopManager* ShopManagerRef;
 
 	// Properties for in game timer
 	FTimerHandle SpawnTimer;
