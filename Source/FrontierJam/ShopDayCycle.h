@@ -35,6 +35,8 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game")
 		EGameState GameState;
 
+
+
 private:
 
 	APawn* PlayerPawnRef;

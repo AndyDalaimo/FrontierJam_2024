@@ -5,7 +5,7 @@
 
 #include "TimerManager.h"
 
-ALaundryManager::ALaundryManager() : timerRate(2.f)
+ALaundryManager::ALaundryManager() : timerRate(2.f), timerDecreaseIncrement(.1f)
 {
 	
 }
@@ -38,6 +38,8 @@ void ALaundryManager::LaundrySpawnTimerHandler()
 	else {
 		ReputationUpdate();
 		GameInstanceRef->GetTimerManager().ClearTimer(SpawnTimer);
+		timerRate = FMath::Clamp(timerRate -= timerDecreaseIncrement, 1.0f, 10.f);
+		// timerRate -= timerDecreaseIncrement;
 	}
 }
 
@@ -53,7 +55,6 @@ FVector ALaundryManager::GetLaundrySpawnLocation()
 	else {
 		return FVector(0, 0, 0);
 	}
-
 }
 
 // Take One less reputation point for each bag of Laundry the player 
