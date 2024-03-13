@@ -23,18 +23,20 @@ void AShopManager::BuyItem(float cost)
 }
 
 // 
-void AShopManager::UpdateUtilitiesCost(TArray<EMachineUpgrade> Machines, int NumMachines)
+void AShopManager::UpdateUtilitiesCost(EMachineUpgrade MachineState)
 {
 	int temp = 0;
 
-	for (EMachineUpgrade machine : Machines)
+	Economy.CurrentMachines.Push(MachineState);
+
+	for (EMachineUpgrade machine : Economy.CurrentMachines)
 	{
 		temp += static_cast<int32>(machine);
+		UE_LOG(LogTemp, Warning, TEXT("Current Machine: %d"), static_cast<int32>(machine));
 	}
 
-	Economy.UtilitiesCost = temp * NumMachines;
+	Economy.UtilitiesCost = temp * Economy.CurrentMachines.Num();
 }
-
 
 
 // ----------------------------------------------------------
