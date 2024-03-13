@@ -37,6 +37,9 @@ void AWashingMachine::BeginPlay()
 	ShopManagerRef = Cast<AShopManager>(UGameplayStatics::GetActorOfClass(GetWorld(), AShopManager::StaticClass()));
 	GameInstanceRef = Cast<UShopDayCycle>(GetWorld()->GetGameInstance());
 
+	// Upgrade Utilities Cost in ShopManager
+	ShopManagerRef->UpdateUtilitiesCost(this->UpgradeState);
+
 	// Bind Timer Function
 	TimerDelegate.BindUFunction(this, "WashCycle");
 }
@@ -53,6 +56,9 @@ void AWashingMachine::MachineWashOnOverlap(UPrimitiveComponent* OverlappedCompon
 	ALaundryBag* Bag = Cast<ALaundryBag>(OtherActor);
 	if (OtherActor != this && Bag != nullptr && GameInstanceRef->GameState == EGameState::DAY && !bWashing)
 	{
+		// Trigger Blueprint event (Anims, etc.)
+		K2_StartWashCycle();
+		
 		bWashing = true;
 		washTimeElapsed = 0;
 		GetWorld()->GetTimerManager().SetTimer(WashTimer, TimerDelegate, timerRate, true);
@@ -69,6 +75,9 @@ void AWashingMachine::WashCycle()
 
 	if (washTimeElapsed >= WashCycleTime)
 	{
+		// Trigger Blueprint event (Anims, etc.)
+		K2_EndWashCycle();
+		
 		GameInstanceRef->GetTimerManager().ClearTimer(WashTimer);
 		bWashing = false;
 		ShopManagerRef->Economy.Cash += WashReward;
@@ -89,19 +98,22 @@ void AWashingMachine::UpgradeMachine()
 				UE_LOG(LogTemp, Display, TEXT("Upgrading Machine: Small to medium"));
 				ShopManagerRef->BuyItem(UpgradeCost); 
 				UpgradeState = EMachineUpgrade::MEDIUM;
+				ShopManagerRef->Economy.CurrentMachines.RemoveSingleSwap(EMachineUpgrade::SMALL);
+				ShopManagerRef->UpdateUtilitiesCost(UpgradeState);
 				WashReward += WashReward_Increase;
 				break;
 			case (EMachineUpgrade::MEDIUM) :
 				UE_LOG(LogTemp, Display, TEXT("Upgrading Machine: Medium to Large"));
 				ShopManagerRef->BuyItem(UpgradeCost);
 				UpgradeState = EMachineUpgrade::LARGE;
+				ShopManagerRef->Economy.CurrentMachines.RemoveSingleSwap(EMachineUpgrade::MEDIUM);
+				ShopManagerRef->UpdateUtilitiesCost(UpgradeState);
 				WashReward += WashReward_Increase;
 				break;
 		}
 	}
 	else {
 		UE_LOG(LogTemp, Display, TEXT("Not enough money to upgrade Machine"));
-
 	}
 
 

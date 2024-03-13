@@ -66,6 +66,15 @@ protected:
 	UFUNCTION()
 		void WashCycle();
 
+	// Anim Cue functions for BP
+	UFUNCTION(BlueprintImplementableEvent)
+		void K2_StartWashCycle();
+	void K2_StartWashCycle_Implementable() { };
+	
+	UFUNCTION(BlueprintImplementableEvent)
+		void K2_EndWashCycle();
+	void K2_EndWashCycle_Implementable() { };
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

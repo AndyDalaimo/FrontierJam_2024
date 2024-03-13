@@ -11,9 +11,10 @@
 UENUM(BlueprintType)
 enum class EMachineUpgrade : uint8
 {
-	SMALL = 0 UMETA(DisplayName = "Small"),
-	MEDIUM = 1 UMETA(DisplayName = "Medium"),
-	LARGE = 2 UMETA(DisplayName = "Large"),
+	NONE = 0 UMETA(Hidden),
+	SMALL = 1 UMETA(DisplayName = "Small"),
+	MEDIUM = 2 UMETA(DisplayName = "Medium"),
+	LARGE = 3 UMETA(DisplayName = "Large"),
 };
 
 // Enum State tracker to influence UI Reviews and Store efficiency/Cleanliness
@@ -38,6 +39,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Economy")
 	float Cash;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Economy|Utilities")
+	TArray<EMachineUpgrade> CurrentMachines;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Economy|Utilities")
 	float UtilitiesCost;
@@ -109,7 +113,7 @@ public:
 		void BuyItem(float cost);
 
 	UFUNCTION()
-		void UpdateUtilitiesCost(TArray<EMachineUpgrade> Machines, int NumMachines);
+		void UpdateUtilitiesCost(EMachineUpgrade MachineState);
 
 	UFUNCTION()
 		void UpdateCleanliness(int8 update);

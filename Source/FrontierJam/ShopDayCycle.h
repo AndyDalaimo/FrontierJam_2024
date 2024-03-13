@@ -16,8 +16,6 @@ enum class EGameState : uint8
 	NIGHT = 1 UMETA(DisplayName = "NightCycle"),
 };
 
-
-
 /**
  * 
  */
@@ -39,6 +37,7 @@ public:
 
 private:
 
+	APawn* PlayerPawnRef;
 	// Properties for in game timer
 	FTimerHandle DayTimer;
 	FTimerDelegate TimerDelegate;
@@ -46,6 +45,9 @@ private:
 	// In Game Time for day cycle
 	UPROPERTY(EditDefaultsOnly)
 		int32 dayCycleTime;
+	
+	UPROPERTY(EditDefaultsOnly)
+		FVector PlayerStartPosition;
 
 	UPROPERTY(EditDefaultsOnly)
 	float timerRate = 1.f;

@@ -16,6 +16,9 @@ UShopDayCycle::UShopDayCycle(const FObjectInitializer& ObjectInitializer) : dayC
 // Player will interact with world during this cycle. Will Restart when player decides to end Night Cycle
 void UShopDayCycle::InitializeDayCycle()
 {
+	PlayerPawnRef = Cast<APawn>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	PlayerPawnRef->SetActorLocation(PlayerStartPosition);
+
 	timeElapsed = 0.f;
 	GameState = EGameState::DAY;
 
