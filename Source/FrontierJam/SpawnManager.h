@@ -6,9 +6,18 @@
 #include "GameFramework/Actor.h"
 #include "WashingMachine.h"
 #include "ShopDayCycle.h"
+#include "ShopManager.h"
+#include "Kismet/GameplayStatics.h"
 #include "Components/BoxComponent.h"
 #include "Components/ArrowComponent.h"
 #include "SpawnManager.generated.h"
+
+UENUM(BlueprintType)
+enum class EItemToSpawn : uint8
+{
+	MACHINE = 0 UMETA(DisplayName = "WashingMachine"),
+	DECOR = 1 UMETA(Displayname = "Decor")
+};
 
 UCLASS()
 class FRONTIERJAM_API ASpawnManager : public AActor
@@ -18,15 +27,21 @@ class FRONTIERJAM_API ASpawnManager : public AActor
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SpawnMesh", meta = (AllowPrivateAccess = "true"))
 		class UStaticMeshComponent* SpawnMesh;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SpawnCollider", meta = (AllowPrivateAccess = "true"))
-		class UBoxComponent* SpawnCollider;
-
 	UPROPERTY(VisibleAnywhere, Category = "MachineSpawnLocation", meta = (AlllowPrivateAccess = "true"))
 		class UArrowComponent* MachineSpawnLocation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SpawnParameters|DecorItemToSpawn", meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<AActor> DecorBlueprintClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SpawnParameters|DecorItemToSpawn", meta = (AllowPrivateAccess = "true"))
+		int ReputationIncrease;
 	
 public:	
 	// Sets default values for this actor's properties
 	ASpawnManager();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SpawnParameters")
+		EItemToSpawn ItemToSpawn;
 
 	UFUNCTION()
 	void SpawnNewMachine();
@@ -35,21 +50,15 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UFUNCTION()
-		void PlayerInteractionOnOverlap(UPrimitiveComponent* OverlappedComponent,
-			AActor* OtherActor,
-			UPrimitiveComponent* OtherComp,
-			int32 OtherBodyIndex,
-			bool bFromSweep,
-			const FHitResult& SweepResult);
-
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 private:
 
-	// AFrontierJamCharacter* PlayerRef;
+
 	UShopDayCycle* GameInstanceRef;
+	AShopManager* ShopManagerRef;
+
 
 };

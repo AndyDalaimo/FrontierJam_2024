@@ -24,6 +24,7 @@ void UShopDayCycle::InitializeDayCycle()
 
 	TimerDelegate.BindUFunction(this, "DayCycle");
 	GetWorld()->GetTimerManager().SetTimer(DayTimer, TimerDelegate, timerRate, true);
+	K2_OnDayCycle();
 }
 
 // Function ticking on timerRate.
@@ -37,5 +38,6 @@ void UShopDayCycle::DayCycle()
 	{
 		GetTimerManager().ClearTimer(DayTimer);
 		GameState = EGameState::NIGHT;
+		K2_OnNightCycle();
 	}
 }

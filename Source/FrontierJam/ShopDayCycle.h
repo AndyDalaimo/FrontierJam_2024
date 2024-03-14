@@ -32,6 +32,14 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void InitializeDayCycle();
 
+	UFUNCTION(BlueprintImplementableEvent)
+		void K2_OnDayCycle();
+	void K2_OnDayCycle_Implementable() {};
+	
+	UFUNCTION(BlueprintImplementableEvent)
+		void K2_OnNightCycle();
+	void K2_OnNightCycle_Implementable() {};
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game")
 		EGameState GameState;
 
