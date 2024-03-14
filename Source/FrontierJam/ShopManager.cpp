@@ -54,11 +54,11 @@ void AShopManager::UpdateReputation()
 
 
 	// Change this later. Is ugly
-	if (Reputation.Reputation > 10)
+	if (Reputation.Reputation > 20)
 	{
 		Reputation.RepState = EReputationState::POSITIVE;
 	}
-	else if (Reputation.Reputation > 20)
+	else if (Reputation.Reputation > 50)
 	{
 		Reputation.RepState = EReputationState::EXCELLENT;
 	}

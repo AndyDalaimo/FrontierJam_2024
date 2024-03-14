@@ -7,7 +7,7 @@
 #include "TimerManager.h"
 
 // Sets default values
-AWashingMachine::AWashingMachine() : UpgradeCost(100), UpgradeIncrease(250), UpgradeState(EMachineUpgrade::SMALL), WashCycleTime(5), bWashing(false)
+AWashingMachine::AWashingMachine() : UpgradeCost(100), UpgradeIncrease(250), UpgradeState(EMachineUpgrade::SMALL), WashCycleTime(5), bWashing(false), ReputationIncrease(1)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -23,6 +23,7 @@ AWashingMachine::AWashingMachine() : UpgradeCost(100), UpgradeIncrease(250), Upg
 	MachineCollisionComp = CreateDefaultSubobject<UBoxComponent>(TEXT("MachineCollisionComp"));
 	MachineCollisionComp->AttachToComponent(MachineMesh, FAttachmentTransformRules::KeepRelativeTransform);
 	MachineCollisionComp->SetBoxExtent(FVector(32.0, 32.0, 32.0));
+	MachineCollisionComp->SetRelativeLocation(FVector(0, 90, 0));
 	MachineCollisionComp->OnComponentBeginOverlap.AddDynamic(this, &AWashingMachine::MachineWashOnOverlap);
 
 }
@@ -81,6 +82,7 @@ void AWashingMachine::WashCycle()
 		GameInstanceRef->GetTimerManager().ClearTimer(WashTimer);
 		bWashing = false;
 		ShopManagerRef->Economy.Cash += WashReward;
+		ShopManagerRef->Reputation.Reputation += ReputationIncrease;
 	}
 }
 
@@ -99,6 +101,7 @@ void AWashingMachine::UpgradeMachine()
 				ShopManagerRef->BuyItem(UpgradeCost); 
 				UpgradeState = EMachineUpgrade::MEDIUM;
 				ShopManagerRef->Economy.CurrentMachines.RemoveSingleSwap(EMachineUpgrade::SMALL);
+				ReputationIncrease++;
 				ShopManagerRef->UpdateUtilitiesCost(UpgradeState);
 				WashReward += WashReward_Increase;
 				break;
@@ -107,6 +110,7 @@ void AWashingMachine::UpgradeMachine()
 				ShopManagerRef->BuyItem(UpgradeCost);
 				UpgradeState = EMachineUpgrade::LARGE;
 				ShopManagerRef->Economy.CurrentMachines.RemoveSingleSwap(EMachineUpgrade::MEDIUM);
+				ReputationIncrease++;
 				ShopManagerRef->UpdateUtilitiesCost(UpgradeState);
 				WashReward += WashReward_Increase;
 				break;

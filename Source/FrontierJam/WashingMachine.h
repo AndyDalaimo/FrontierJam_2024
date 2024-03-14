@@ -36,6 +36,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Machine|Upgrade")
 		int UpgradeIncrease;
 
+	UPROPERTY(EditAnywhere, Category = "Machine|WasCycle")
+		uint8 ReputationIncrease;
+
 	UPROPERTY(EditAnywhere, Category = "Machine|WashCycle")
 		int WashCycleTime;
 
