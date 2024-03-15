@@ -6,7 +6,7 @@
 #include "UObject/ConstructorHelpers.h"
 
 // Sets default values
-ASpawnManager::ASpawnManager() : ItemToSpawn(EItemToSpawn::MACHINE), ReputationIncrease(0)
+ASpawnManager::ASpawnManager() : ItemToSpawn(EItemToSpawn::MACHINE), ReputationIncrease(0), SpawnRotation(FRotator(0,0,0))
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -42,12 +42,12 @@ void ASpawnManager::SpawnNewMachine()
 	{
 		case (EItemToSpawn::MACHINE) :
 			// newMachine = Cast<AWashingMachine>(GetWorld()->SpawnActor<AWashingMachine>(MachineSpawnLocation->GetComponentLocation(), FRotator(0, 0, 0), params));
-			if (MachineBlueprintClass != nullptr) BlueprintToSpawn = GetWorld()->SpawnActor<AActor>(MachineBlueprintClass, MachineSpawnLocation->GetComponentLocation(), FRotator(0, 0, 0), params);
+			if (MachineBlueprintClass != nullptr) BlueprintToSpawn = GetWorld()->SpawnActor<AActor>(MachineBlueprintClass, MachineSpawnLocation->GetComponentLocation(), SpawnRotation, params);
 			UE_LOG(LogTemp, Warning, TEXT("Spawned New Machine"));
 			break;
 		case (EItemToSpawn::DECOR) :
 			UE_LOG(LogTemp, Warning, TEXT("Spawned New Decor"));
-			if (DecorBlueprintClass != nullptr) BlueprintToSpawn = GetWorld()->SpawnActor<AActor>(DecorBlueprintClass, MachineSpawnLocation->GetComponentLocation(), FRotator(0, 0, 0), params);
+			if (DecorBlueprintClass != nullptr) BlueprintToSpawn = GetWorld()->SpawnActor<AActor>(DecorBlueprintClass, MachineSpawnLocation->GetComponentLocation(), SpawnRotation, params);
 			ShopManagerRef->Reputation.Reputation += ReputationIncrease;
 			break;
 	}

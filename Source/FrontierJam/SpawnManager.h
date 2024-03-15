@@ -39,6 +39,9 @@ class FRONTIERJAM_API ASpawnManager : public AActor
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SpawnParameters|DecorItemToSpawn", meta = (AllowPrivateAccess = "true"))
 		int ReputationIncrease;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SpawnParameters", meta = (AllowPrivateAccess = "true"))
+		FRotator SpawnRotation;
+	
 public:	
 	// Sets default values for this actor's properties
 	ASpawnManager();
