@@ -39,9 +39,6 @@ void AWashingMachine::BeginPlay()
 	ShopManagerRef = Cast<AShopManager>(UGameplayStatics::GetActorOfClass(GetWorld(), AShopManager::StaticClass()));
 	GameInstanceRef = Cast<UShopDayCycle>(GetWorld()->GetGameInstance());
 
-	// Clamp the Percent between .01 - .1 
-	ChoasChancePercent = FMath::Clamp(ChoasChancePercent, 0.01f, 0.1f);
-
 	// Upgrade Utilities Cost in ShopManager
 	ShopManagerRef->UpdateUtilitiesCost(this->UpgradeState);
 
@@ -115,7 +112,7 @@ void AWashingMachine::WashCycle()
 // Upgrade Machine and subtract from Economy
 void AWashingMachine::UpgradeMachine()
 {
-	if (ShopManagerRef->Economy.Cash >= UpgradeCost)
+	if (ShopManagerRef->Economy.Cash >= UpgradeCost && ChaosState == EChaosState::WORKING)
 	{
 		UpgradeCost += UpgradeIncrease;
 		// Update new upgrade cost and State
@@ -126,6 +123,7 @@ void AWashingMachine::UpgradeMachine()
 				ShopManagerRef->BuyItem(UpgradeCost); 
 				UpgradeState = EMachineUpgrade::MEDIUM;
 				ShopManagerRef->Economy.CurrentMachines.RemoveSingleSwap(EMachineUpgrade::SMALL);
+				K2_UpgradeEvent();
 				ReputationIncrease++;
 				ShopManagerRef->UpdateUtilitiesCost(UpgradeState);
 				ChoasChancePercent -= ChoasChancePercentDecrease;
@@ -136,6 +134,7 @@ void AWashingMachine::UpgradeMachine()
 				ShopManagerRef->BuyItem(UpgradeCost);
 				UpgradeState = EMachineUpgrade::LARGE;
 				ShopManagerRef->Economy.CurrentMachines.RemoveSingleSwap(EMachineUpgrade::MEDIUM);
+				K2_UpgradeEvent();
 				ReputationIncrease++;
 				ShopManagerRef->UpdateUtilitiesCost(UpgradeState);
 				ChoasChancePercent -= ChoasChancePercentDecrease;

@@ -32,6 +32,9 @@ class FRONTIERJAM_API ASpawnManager : public AActor
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SpawnParameters|DecorItemToSpawn", meta = (AllowPrivateAccess = "true"))
 		TSubclassOf<AActor> DecorBlueprintClass;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SpawnParameters|MachineToSpawn", meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<AActor> MachineBlueprintClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SpawnParameters|DecorItemToSpawn", meta = (AllowPrivateAccess = "true"))
 		int ReputationIncrease;

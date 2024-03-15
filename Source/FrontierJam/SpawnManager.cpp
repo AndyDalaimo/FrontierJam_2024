@@ -35,13 +35,14 @@ void ASpawnManager::BeginPlay()
 void ASpawnManager::SpawnNewMachine()
 {
 	FActorSpawnParameters params;
-	AWashingMachine* newMachine;
+	// AWashingMachine* newMachine;
 	AActor* BlueprintToSpawn;
 
 	switch (ItemToSpawn)
 	{
 		case (EItemToSpawn::MACHINE) :
-			newMachine = Cast<AWashingMachine>(GetWorld()->SpawnActor<AWashingMachine>(MachineSpawnLocation->GetComponentLocation(), FRotator(0, 0, 0), params));
+			// newMachine = Cast<AWashingMachine>(GetWorld()->SpawnActor<AWashingMachine>(MachineSpawnLocation->GetComponentLocation(), FRotator(0, 0, 0), params));
+			if (MachineBlueprintClass != nullptr) BlueprintToSpawn = GetWorld()->SpawnActor<AActor>(MachineBlueprintClass, MachineSpawnLocation->GetComponentLocation(), FRotator(0, 0, 0), params);
 			UE_LOG(LogTemp, Warning, TEXT("Spawned New Machine"));
 			break;
 		case (EItemToSpawn::DECOR) :

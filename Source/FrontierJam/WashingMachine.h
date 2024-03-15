@@ -106,6 +106,11 @@ protected:
 		void K2_EndChaosEvent();
 	void K2_EndChaosEvent_Implementable() { };
 
+	UFUNCTION(BlueprintImplementableEvent)
+		void K2_UpgradeEvent();
+	void K2_UpgradeEvent_Implementable() { };
+
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
