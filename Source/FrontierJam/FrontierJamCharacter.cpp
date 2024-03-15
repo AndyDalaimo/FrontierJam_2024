@@ -128,7 +128,7 @@ void AFrontierJamCharacter::Interact(const FInputActionValue& Value)
 
 		for (UActorComponent* comp : HitResult.GetActor()->GetComponents())
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Player Interact: %s"), *comp->GetName());
+			// UE_LOG(LogTemp, Warning, TEXT("Player Interact: %s"), *comp->GetName());
 
 			if (*comp->GetName() == SpawnString && GameInstanceRef->GameState == EGameState::NIGHT)
 			{
@@ -139,6 +139,11 @@ void AFrontierJamCharacter::Interact(const FInputActionValue& Value)
 				// Add Upgrade Machine function here
 				// UE_LOG(LogTemp, Warning, TEXT("Attempting to Upgrade this machine"));
 				UpgradeThisMachine((AWashingMachine*)HitResult.GetActor());
+			}
+			else if (*comp->GetName() == MachineString && GameInstanceRef->GameState == EGameState::DAY)
+			{
+				//TODO --  If this machine is broken, FIX IT HERE -- TODO 
+				FixThisMachine((AWashingMachine*)HitResult.GetActor());
 			}
 			else if (*comp->GetName() == LaundryString && GameInstanceRef->GameState == EGameState::DAY)
 			{
@@ -175,6 +180,12 @@ void AFrontierJamCharacter::UpgradeThisMachine(AWashingMachine* MachineToUpgrade
 {
 	UE_LOG(LogTemp, Warning, TEXT("Attempting to Upgrade this machine"));
 	MachineToUpgrade->UpgradeMachine();
+}
+
+void AFrontierJamCharacter::FixThisMachine(AWashingMachine* MachineToFix)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Attempting to Fix this machine"));
+	MachineToFix->FixMachine();
 }
 
 void AFrontierJamCharacter::PickupItem(ALaundryBag* Pickup)

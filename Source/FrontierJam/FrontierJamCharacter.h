@@ -96,6 +96,7 @@ protected:
 	// Interact Functions for each Different 
 	void SpawnNewMachine(ASpawnManager* SpawnManager);
 	void UpgradeThisMachine(AWashingMachine* MachineToUpgrade);
+	void FixThisMachine(AWashingMachine* MachineToFix);
 	void PickupItem(ALaundryBag* Pickup);
 	void LaunchItem();
 

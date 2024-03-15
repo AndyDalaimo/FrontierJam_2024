@@ -30,7 +30,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LaundrySpawning")
 		TArray<FVector> PossibleSpawnLocations;
 	
-		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LaundrySpawning")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LaundrySpawning")
 	float timerDecreaseIncrement;
 
 protected:
