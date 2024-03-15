@@ -18,6 +18,7 @@ void UShopDayCycle::InitializeDayCycle()
 {
 	PlayerPawnRef = Cast<APawn>(GetWorld()->GetFirstPlayerController()->GetPawn());
 	PlayerPawnRef->SetActorLocation(PlayerStartPosition);
+	PlayerPawnRef->SetActorRotation(PlayerStartRotation, ETeleportType::None);
 
 	timeElapsed = 0.f;
 	GameState = EGameState::DAY;

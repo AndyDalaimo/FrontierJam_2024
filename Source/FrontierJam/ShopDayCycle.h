@@ -58,6 +58,9 @@ private:
 	
 	UPROPERTY(EditDefaultsOnly)
 		FVector PlayerStartPosition;
+	
+	UPROPERTY(EditDefaultsOnly)
+		FRotator PlayerStartRotation;
 
 	UPROPERTY(EditDefaultsOnly)
 	float timerRate = 1.f;
