@@ -96,6 +96,7 @@ void AWashingMachine::WashCycle()
 	}
 	else if (washTimeElapsed < WashCycleTime && ChaosState == EChaosState::BROKEN) {
 		// Pause Timer and only resume when player fixes the machine
+		K2_InitChaosEvent();
 		GetWorld()->GetTimerManager().PauseTimer(WashTimer);
 	}
 	else if (GameInstanceRef->GameState == EGameState::NIGHT)
@@ -156,6 +157,7 @@ void AWashingMachine::FixMachine()
 	if (ChaosState == EChaosState::BROKEN && GameInstanceRef->GameState == EGameState::DAY)
 	{
 		ChaosState = EChaosState::WORKING;
+		K2_EndChaosEvent();
 		GetWorld()->GetTimerManager().UnPauseTimer(WashTimer);
 	}
 	else if (ChaosState == EChaosState::BROKEN && GameInstanceRef->GameState == EGameState::NIGHT)
@@ -163,7 +165,7 @@ void AWashingMachine::FixMachine()
 		ChaosState = EChaosState::WORKING;
 		// Trigger Blueprint event (Anims, etc.)
 		K2_EndWashCycle();
-
+		K2_EndChaosEvent();
 		GameInstanceRef->GetTimerManager().ClearTimer(WashTimer);
 		bWashing = false;
 	}

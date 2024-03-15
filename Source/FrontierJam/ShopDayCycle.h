@@ -43,6 +43,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game")
 		EGameState GameState;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Game")
+		float TimeLeftInDay;
+
 
 
 private:

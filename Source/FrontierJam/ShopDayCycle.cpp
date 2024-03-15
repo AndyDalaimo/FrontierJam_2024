@@ -6,7 +6,7 @@
 
 
 
-UShopDayCycle::UShopDayCycle(const FObjectInitializer& ObjectInitializer) : dayCycleTime(10), timerRate(1.f), GameState(EGameState::DAY)
+UShopDayCycle::UShopDayCycle(const FObjectInitializer& ObjectInitializer) : dayCycleTime(10), timerRate(1.f), GameState(EGameState::DAY), TimeLeftInDay(dayCycleTime)
 {
 
 }
@@ -18,7 +18,7 @@ void UShopDayCycle::InitializeDayCycle()
 {
 	PlayerPawnRef = Cast<APawn>(GetWorld()->GetFirstPlayerController()->GetPawn());
 	PlayerPawnRef->SetActorLocation(PlayerStartPosition);
-	PlayerPawnRef->SetActorRotation(PlayerStartRotation, ETeleportType::None);
+	PlayerPawnRef->SetActorRotation(PlayerStartRotation, ETeleportType::ResetPhysics);
 
 	timeElapsed = 0.f;
 	GameState = EGameState::DAY;
@@ -33,6 +33,7 @@ void UShopDayCycle::InitializeDayCycle()
 void UShopDayCycle::DayCycle()
 {
 	timeElapsed++;
+	TimeLeftInDay = dayCycleTime - timeElapsed;
 	// UE_LOG(LogTemp, Display, TEXT("Seconds elapsed: %f"), timeElapsed);
 
 	if (timeElapsed >= dayCycleTime)
