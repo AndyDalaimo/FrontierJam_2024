@@ -16,6 +16,7 @@ ALaundryBag::ALaundryBag()
 
 	LaundryMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("LaundryMesh"));
 	LaundryMesh->SetStaticMesh(LaundryMeshAsset);
+	LaundryMesh->SetSimulatePhysics(true);
 	RootComponent = LaundryMesh;
 
 }

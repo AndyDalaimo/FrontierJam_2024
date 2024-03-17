@@ -79,10 +79,8 @@ void AWashingMachine::WashCycle()
 {
 	washTimeElapsed++;
 	UE_LOG(LogTemp, Display, TEXT("Wash Time elapsed: %f"), washTimeElapsed);
-	int Chaos = FMath::RandRange(0, 100);
+	float Chaos = FMath::RandRange(0.f, 100.f);
 
-	if (Chaos < (ChoasChancePercent*100)) ChaosState = EChaosState::BROKEN;
-	UE_LOG(LogTemp, Display, TEXT("Broken if Chaos: %d < %f"), Chaos, ChoasChancePercent*100);
 
 	if (washTimeElapsed >= WashCycleTime && ChaosState == EChaosState::WORKING)
 	{
@@ -107,6 +105,9 @@ void AWashingMachine::WashCycle()
 		GameInstanceRef->GetTimerManager().ClearTimer(WashTimer);
 		bWashing = false;
 	}
+
+	if (Chaos < (ChoasChancePercent*100.f)) ChaosState = EChaosState::BROKEN;
+	UE_LOG(LogTemp, Display, TEXT("Broken if Chaos: %f < %f"), Chaos, ChoasChancePercent*100.f);
 }
 
 
