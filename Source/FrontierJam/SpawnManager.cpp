@@ -38,17 +38,22 @@ void ASpawnManager::SpawnNewMachine()
 	// AWashingMachine* newMachine;
 	AActor* BlueprintToSpawn;
 
+	// Only let the player buy this item if they have enough cash 
+	if (ShopManagerRef->Economy.Cash < ItemCost) return;
+
 	switch (ItemToSpawn)
 	{
 		case (EItemToSpawn::MACHINE) :
 			// newMachine = Cast<AWashingMachine>(GetWorld()->SpawnActor<AWashingMachine>(MachineSpawnLocation->GetComponentLocation(), FRotator(0, 0, 0), params));
 			if (MachineBlueprintClass != nullptr) BlueprintToSpawn = GetWorld()->SpawnActor<AActor>(MachineBlueprintClass, MachineSpawnLocation->GetComponentLocation(), SpawnRotation, params);
 			ShopManagerRef->BuyItem(ItemCost);
+			this->Destroy();
 			break;
 		case (EItemToSpawn::DECOR) :
 			if (DecorBlueprintClass != nullptr) BlueprintToSpawn = GetWorld()->SpawnActor<AActor>(DecorBlueprintClass, MachineSpawnLocation->GetComponentLocation(), SpawnRotation, params);
 			ShopManagerRef->Reputation.Reputation += ReputationIncrease;
 			ShopManagerRef->BuyItem(ItemCost);
+			this->Destroy();
 			break;
 	}
 	
