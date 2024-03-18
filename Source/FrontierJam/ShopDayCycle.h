@@ -47,7 +47,6 @@ public:
 		float TimeLeftInDay;
 
 
-
 private:
 
 	APawn* PlayerPawnRef;
@@ -64,6 +63,7 @@ private:
 	
 	UPROPERTY(EditDefaultsOnly)
 		FRotator PlayerStartRotation;
+	
 
 	UPROPERTY(EditDefaultsOnly)
 	float timerRate = 1.f;

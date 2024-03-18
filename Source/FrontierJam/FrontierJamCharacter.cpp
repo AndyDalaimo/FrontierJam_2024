@@ -150,7 +150,7 @@ void AFrontierJamCharacter::Interact(const FInputActionValue& Value)
 				PickupItem((ALaundryBag*)HitResult.GetActor());
 			}
 		}	
-		DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 5.0f, 0, .5f);
+		// DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 5.0f, 0, .5f);
 	}
 	else if (bHasPickup)
 	{
