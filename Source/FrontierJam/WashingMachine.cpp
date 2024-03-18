@@ -57,7 +57,7 @@ void AWashingMachine::MachineWashOnOverlap(UPrimitiveComponent* OverlappedCompon
 	const FHitResult& SweepResult)
 {
 	ALaundryBag* Bag = Cast<ALaundryBag>(OtherActor);
-	if (OtherActor != this && Bag != nullptr && GameInstanceRef->GameState == EGameState::DAY && !bWashing)
+	if (Bag != nullptr && GameInstanceRef->GameState == EGameState::DAY && !bWashing)
 	{
 
 		if (ChaosState == EChaosState::WORKING)
@@ -96,6 +96,7 @@ void AWashingMachine::WashCycle()
 	else if (washTimeElapsed < WashCycleTime && ChaosState == EChaosState::BROKEN) {
 		// Pause Timer and only resume when player fixes the machine
 		K2_InitChaosEvent();
+
 		GetWorld()->GetTimerManager().PauseTimer(WashTimer);
 	}
 	else if (GameInstanceRef->GameState == EGameState::NIGHT)
@@ -172,6 +173,7 @@ void AWashingMachine::FixMachine()
 		// Trigger Blueprint event (Anims, etc.)
 		K2_EndWashCycle();
 		K2_EndChaosEvent();
+
 		GameInstanceRef->GetTimerManager().ClearTimer(WashTimer);
 		bWashing = false;
 	}
