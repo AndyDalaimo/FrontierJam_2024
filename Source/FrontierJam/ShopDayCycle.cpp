@@ -18,7 +18,10 @@ void UShopDayCycle::InitializeDayCycle()
 {
 	PlayerPawnRef = Cast<APawn>(GetWorld()->GetFirstPlayerController()->GetPawn());
 	PlayerPawnRef->SetActorLocation(PlayerStartPosition);
-	PlayerPawnRef->SetActorRotation(PlayerStartRotation, ETeleportType::ResetPhysics);
+	PlayerPawnRef->SetActorRotation(PlayerStartRotation);
+	// Make sure player is facing store 
+	// PlayerPawnRef->AddControllerYawInput(90);
+	UE_LOG(LogTemp, Error, TEXT("Player Z Rotation: %f"), PlayerPawnRef->GetActorRotation().Yaw);
 
 	timeElapsed = 0.f;
 	GameState = EGameState::DAY;

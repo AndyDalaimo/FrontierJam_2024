@@ -7,7 +7,7 @@
 #include "TimerManager.h"
 
 // Sets default values
-AWashingMachine::AWashingMachine() : UpgradeCost(100), UpgradeIncrease(250), UpgradeState(EMachineUpgrade::SMALL), ChaosState(EChaosState::WORKING),
+AWashingMachine::AWashingMachine() : UpgradeCost(50), UpgradeIncrease(15), UpgradeState(EMachineUpgrade::SMALL), ChaosState(EChaosState::WORKING),
 WashCycleTime(5), bWashing(false), ReputationIncrease(1), ChoasChancePercent(.10f), ChoasChancePercentDecrease(0.01f)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -41,6 +41,7 @@ void AWashingMachine::BeginPlay()
 
 	// Upgrade Utilities Cost in ShopManager
 	ShopManagerRef->UpdateUtilitiesCost(this->UpgradeState);
+
 
 	// Bind Timer Function
 	TimerDelegate.BindUFunction(this, "WashCycle");
@@ -116,7 +117,6 @@ void AWashingMachine::UpgradeMachine()
 {
 	if (ShopManagerRef->Economy.Cash >= UpgradeCost && ChaosState == EChaosState::WORKING)
 	{
-		UpgradeCost += UpgradeIncrease;
 		// Update new upgrade cost and State
 		switch (UpgradeState)
 		{
@@ -128,6 +128,7 @@ void AWashingMachine::UpgradeMachine()
 				K2_UpgradeEvent();
 				ReputationIncrease++;
 				ShopManagerRef->UpdateUtilitiesCost(UpgradeState);
+				ShopManagerRef->BuyItem(UpgradeCost);
 				ChoasChancePercent -= ChoasChancePercentDecrease;
 				WashReward += WashReward_Increase;
 				break;
@@ -139,10 +140,14 @@ void AWashingMachine::UpgradeMachine()
 				K2_UpgradeEvent();
 				ReputationIncrease++;
 				ShopManagerRef->UpdateUtilitiesCost(UpgradeState);
+				ShopManagerRef->BuyItem(UpgradeCost);
 				ChoasChancePercent -= ChoasChancePercentDecrease;
 				WashReward += WashReward_Increase;
 				break;
 		}
+
+		// Increase Upgrade cost of machine
+		UpgradeCost += UpgradeIncrease;
 	}
 	else {
 		UE_LOG(LogTemp, Display, TEXT("Not enough money to upgrade Machine"));

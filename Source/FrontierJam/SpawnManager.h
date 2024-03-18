@@ -38,6 +38,9 @@ class FRONTIERJAM_API ASpawnManager : public AActor
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SpawnParameters|DecorItemToSpawn", meta = (AllowPrivateAccess = "true"))
 		int ReputationIncrease;
+		
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SpawnParameters", meta = (AllowPrivateAccess = "true"))
+		int ItemCost;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SpawnParameters", meta = (AllowPrivateAccess = "true"))
 		FRotator SpawnRotation;

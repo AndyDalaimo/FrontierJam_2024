@@ -166,8 +166,7 @@ void AFrontierJamCharacter::SpawnNewMachine(ASpawnManager* SpawnManager)
 	if (ShopManagerRef->Economy.Cash >= 150.f)
 	{
 		SpawnManager->SpawnNewMachine();
-		SpawnManager->Destroy();
-		ShopManagerRef->BuyItem(150.f);
+		// SpawnManager->Destroy();
 	}
 	else {
 		UE_LOG(LogTemp, Display, TEXT("Not Enough CASH"));
