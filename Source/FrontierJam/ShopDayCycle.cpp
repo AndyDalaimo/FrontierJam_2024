@@ -21,7 +21,6 @@ void UShopDayCycle::InitializeDayCycle()
 	PlayerPawnRef->SetActorRotation(PlayerStartRotation);
 	// Make sure player is facing store 
 	// PlayerPawnRef->AddControllerYawInput(90);
-	UE_LOG(LogTemp, Error, TEXT("Player Z Rotation: %f"), PlayerPawnRef->GetActorRotation().Yaw);
 
 	timeElapsed = 0.f;
 	GameState = EGameState::DAY;
@@ -46,3 +45,4 @@ void UShopDayCycle::DayCycle()
 		K2_OnNightCycle();
 	}
 }
+

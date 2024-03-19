@@ -51,6 +51,9 @@ protected:
 	UFUNCTION(BlueprintCallable)
 		void DestroyAllLeftoverBags();
 
+	UFUNCTION(BlueprintCallable)
+		void AdjustTimerRate();
+
 private:
 
 	FActorSpawnParameters params;

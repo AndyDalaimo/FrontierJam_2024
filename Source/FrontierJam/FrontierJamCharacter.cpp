@@ -19,6 +19,7 @@ AFrontierJamCharacter::AFrontierJamCharacter() : ThrowPower(25000)
 	// Character doesnt have a rifle at start
 	bHasRifle = false;
 	bHasPickup = false;
+	bHasWrench = false;
 	
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
@@ -140,15 +141,19 @@ void AFrontierJamCharacter::Interact(const FInputActionValue& Value)
 				// UE_LOG(LogTemp, Warning, TEXT("Attempting to Upgrade this machine"));
 				UpgradeThisMachine((AWashingMachine*)HitResult.GetActor());
 			}
-			else if (*comp->GetName() == MachineString && GameInstanceRef->GameState == EGameState::DAY)
+			else if (bHasWrench && *comp->GetName() == MachineString && GameInstanceRef->GameState == EGameState::DAY)
 			{
-				//TODO --  If this machine is broken, FIX IT HERE -- TODO 
 				FixThisMachine((AWashingMachine*)HitResult.GetActor());
 			}
 			else if (*comp->GetName() == LaundryString && GameInstanceRef->GameState == EGameState::DAY)
 			{
 				PickupItem((ALaundryBag*)HitResult.GetActor());
 			}
+			else if (*comp->GetName() == WrenchString && GameInstanceRef->GameState == EGameState::DAY)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("THis is a Wrench"));
+				PickupWrench((AWrench*)HitResult.GetActor());
+			} 
 		}	
 		// DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 5.0f, 0, .5f);
 	}
@@ -189,11 +194,22 @@ void AFrontierJamCharacter::FixThisMachine(AWashingMachine* MachineToFix)
 
 void AFrontierJamCharacter::PickupItem(ALaundryBag* Pickup)
 {
+	if (bHasWrench) DropWrench();
+
 	LaundryRef = Pickup;
 	LaundryRef->LaundryMesh->SetSimulatePhysics(false);
 	LaundryRef->AttachToComponent(PickupComponent, FAttachmentTransformRules::SnapToTargetIncludingScale);
 	bHasPickup = true;
 }
+
+void AFrontierJamCharacter::PickupWrench(AWrench* Pickup)
+{
+	WrenchRef = Pickup;
+	WrenchRef->WrenchMesh->SetSimulatePhysics(false);
+	WrenchRef->AttachToComponent(PickupComponent, FAttachmentTransformRules::SnapToTargetIncludingScale);
+	bHasWrench = true;
+}
+
 
 void AFrontierJamCharacter::LaunchItem()
 {
@@ -209,6 +225,15 @@ void AFrontierJamCharacter::LaunchItem()
 		UE_LOG(LogTemp, Warning, TEXT("Actor Not Valid"));
 	}
 
+}
+
+void AFrontierJamCharacter::DropWrench()
+{
+	if (WrenchRef != nullptr)
+	{
+		WrenchRef->DropWrench();
+		bHasWrench = false;
+	}
 }
 
 void AFrontierJamCharacter::SetHasRifle(bool bNewHasRifle)

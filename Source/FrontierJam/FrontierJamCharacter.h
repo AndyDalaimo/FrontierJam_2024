@@ -8,6 +8,7 @@
 #include "SpawnManager.h"
 #include "WashingMachine.h"
 #include "LaundryBag.h"
+#include "Wrench.h"
 #include "ShopManager.h"
 #include "ShopDayCycle.h"
 #include "Components/ArrowComponent.h"
@@ -98,6 +99,8 @@ protected:
 	void UpgradeThisMachine(AWashingMachine* MachineToUpgrade);
 	void FixThisMachine(AWashingMachine* MachineToFix);
 	void PickupItem(ALaundryBag* Pickup);
+	void PickupWrench(AWrench* Pickup);
+	void DropWrench();
 	void LaunchItem();
 
 
@@ -116,14 +119,17 @@ private:
 	UShopDayCycle* GameInstanceRef;
 	AShopManager* ShopManagerRef;
 	ALaundryBag* LaundryRef;
+	AWrench* WrenchRef;
 
 	// Components for Player interacting to look out for
 	FString SpawnString = "SpawnMesh";
+	FString WrenchString = "WrenchMesh";
 	FString MachineString = "MachineMesh";
 	FString LaundryString = "LaundryMesh";
 
 	// Tell Interaction if player is holding item to throw
 	bool bHasPickup;
+	bool bHasWrench;
 
 
 };

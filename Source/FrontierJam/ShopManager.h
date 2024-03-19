@@ -6,6 +6,14 @@
 #include "GameFramework/Info.h"
 #include "ShopManager.generated.h"
 
+// Shop States. Will trigger fail state if shop's cash goes in the negative
+UENUM(BlueprintType)
+enum class EShopState : uint8
+{
+	GOODSTANDING = 0 UMETA(DisplayName = "Good Standing"),
+	FAIL = 1 UMETA(DisplayName = "Fail State")
+};
+
 
 // Machine Upgrade states
 UENUM(BlueprintType)
@@ -109,8 +117,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shop")
 	FShopReputation Reputation;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shop")
+		EShopState ShopState;
+
 	UFUNCTION(BlueprintCallable)
 		void BuyItem(float cost);
+
+	UFUNCTION(BlueprintCallable)
+		EShopState PayUtilities();
 
 	UFUNCTION()
 		void UpdateUtilitiesCost(EMachineUpgrade MachineState);
@@ -120,5 +134,7 @@ public:
 
 	UFUNCTION()
 		void UpdateReputation();
+
+
 
 };

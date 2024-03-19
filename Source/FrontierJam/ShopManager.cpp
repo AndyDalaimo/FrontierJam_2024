@@ -8,6 +8,7 @@ AShopManager::AShopManager()
 	// Initialize Base store Economy and Reputation Values
 	Economy.init();
 	Reputation.init();
+	ShopState = EShopState::GOODSTANDING;
 }
 
 
@@ -22,6 +23,21 @@ void AShopManager::BuyItem(float cost)
 	else UE_LOG(LogTemp, Warning, TEXT("Can't Buy that!"));
 }
 
+// Subtract Utilities from the Shop Economy at the start of each day, If they do not have enough money, Fail state
+EShopState AShopManager::PayUtilities()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Paying Utilities"));
+	Economy.Cash -= Economy.UtilitiesCost;
+
+	if (Economy.Cash < 0)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Emerald, "Fail State");
+		ShopState = EShopState::FAIL;
+	}
+
+	return ShopState;
+}
+
 // 
 void AShopManager::UpdateUtilitiesCost(EMachineUpgrade MachineState)
 {
@@ -32,7 +48,7 @@ void AShopManager::UpdateUtilitiesCost(EMachineUpgrade MachineState)
 	for (EMachineUpgrade machine : Economy.CurrentMachines)
 	{
 		temp += static_cast<int32>(machine);
-		UE_LOG(LogTemp, Warning, TEXT("Current Machine: %d"), static_cast<int32>(machine));
+		// UE_LOG(LogTemp, Warning, TEXT("Current Machine: %d"), static_cast<int32>(machine));
 	}
 
 	Economy.UtilitiesCost = temp * Economy.CurrentMachines.Num();

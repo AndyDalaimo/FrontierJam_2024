@@ -38,8 +38,9 @@ void ALaundryManager::LaundrySpawnTimerHandler()
 	else {
 		ReputationUpdate();
 		GameInstanceRef->GetTimerManager().ClearTimer(SpawnTimer);
-		timerRate = FMath::Clamp(timerRate -= timerDecreaseIncrement, 1.0f, 10.f);
-		// timerRate -= timerDecreaseIncrement;
+		AdjustTimerRate();
+		// timerRate = FMath::Clamp(timerRate -= timerDecreaseIncrement, 1.0f, 10.f);
+
 	}
 }
 
@@ -72,6 +73,8 @@ void ALaundryManager::ReputationUpdate()
 	UE_LOG(LogTemp, Warning, TEXT("Num of Bag References end of Day: %d"), numBagsLeft);
 	ShopManagerRef->Reputation.Reputation -= numBagsLeft;
 	ShopManagerRef->UpdateReputation();
+
+
 }
 
 void ALaundryManager::DestroyAllLeftoverBags()
@@ -85,4 +88,23 @@ void ALaundryManager::DestroyAllLeftoverBags()
 	}
 
 	BagReferences.Empty();
+}
+
+// Adjust the amount of laundry the Shop gets depending on its reputation state
+void ALaundryManager::AdjustTimerRate()
+{
+
+	switch (ShopManagerRef->Reputation.RepState)
+	{
+		case (EReputationState::NEGATIVE) :
+			timerRate = 8.f;
+			break;
+		case (EReputationState::NEUTRAL) :
+			timerRate = 6.f;
+			break;
+		case (EReputationState::POSITIVE) :
+			timerRate = 4.f;
+		case (EReputationState::EXCELLENT) :
+			timerRate = 3.f;
+	}
 }
