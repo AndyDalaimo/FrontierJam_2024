@@ -71,7 +71,8 @@ void AWashingMachine::MachineWashOnOverlap(UPrimitiveComponent* OverlappedCompon
 			Bag->Destroy();
 		}
 		
-	}	
+	}
+	
 }
 
 // Start Wash Cycle for this machine
@@ -79,7 +80,7 @@ void AWashingMachine::MachineWashOnOverlap(UPrimitiveComponent* OverlappedCompon
 void AWashingMachine::WashCycle()
 {
 	washTimeElapsed++;
-	UE_LOG(LogTemp, Display, TEXT("Wash Time elapsed: %f"), washTimeElapsed);
+	// UE_LOG(LogTemp, Display, TEXT("Wash Time elapsed: %f"), washTimeElapsed);
 	float Chaos = FMath::RandRange(0.f, 100.f);
 
 
@@ -108,8 +109,9 @@ void AWashingMachine::WashCycle()
 		bWashing = false;
 	}
 
+	// Set Chaos state according to percentage
 	if (Chaos < (ChoasChancePercent*100.f)) ChaosState = EChaosState::BROKEN;
-	UE_LOG(LogTemp, Display, TEXT("Broken if Chaos: %f < %f"), Chaos, ChoasChancePercent*100.f);
+	// UE_LOG(LogTemp, Display, TEXT("Broken if Chaos: %f < %f"), Chaos, ChoasChancePercent*100.f);
 }
 
 
@@ -122,7 +124,7 @@ void AWashingMachine::UpgradeMachine()
 		switch (UpgradeState)
 		{
 			case (EMachineUpgrade::SMALL) :
-				UE_LOG(LogTemp, Display, TEXT("Upgrading Machine: Small to medium"));
+				// UE_LOG(LogTemp, Display, TEXT("Upgrading Machine: Small to medium"));
 				ShopManagerRef->BuyItem(UpgradeCost); 
 				UpgradeState = EMachineUpgrade::MEDIUM;
 				ShopManagerRef->Economy.CurrentMachines.RemoveSingleSwap(EMachineUpgrade::SMALL);
@@ -134,7 +136,7 @@ void AWashingMachine::UpgradeMachine()
 				WashReward += WashReward_Increase;
 				break;
 			case (EMachineUpgrade::MEDIUM) :
-				UE_LOG(LogTemp, Display, TEXT("Upgrading Machine: Medium to Large"));
+				// UE_LOG(LogTemp, Display, TEXT("Upgrading Machine: Medium to Large"));
 				ShopManagerRef->BuyItem(UpgradeCost);
 				UpgradeState = EMachineUpgrade::LARGE;
 				ShopManagerRef->Economy.CurrentMachines.RemoveSingleSwap(EMachineUpgrade::MEDIUM);
@@ -165,9 +167,10 @@ void AWashingMachine::FixMachine()
 	{
 		ChaosState = EChaosState::WORKING;
 		K2_EndChaosEvent();
+		bWashing = true;
 		GetWorld()->GetTimerManager().UnPauseTimer(WashTimer);
 	}
-	else if (ChaosState == EChaosState::BROKEN && GameInstanceRef->GameState == EGameState::NIGHT)
+	/*else if (ChaosState == EChaosState::BROKEN && GameInstanceRef->GameState == EGameState::NIGHT)
 	{
 		ChaosState = EChaosState::WORKING;
 		// Trigger Blueprint event (Anims, etc.)
@@ -176,7 +179,7 @@ void AWashingMachine::FixMachine()
 
 		GameInstanceRef->GetTimerManager().ClearTimer(WashTimer);
 		bWashing = false;
-	}
+	}*/
 }
 
 

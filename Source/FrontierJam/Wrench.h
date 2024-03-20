@@ -21,6 +21,10 @@ public:
 	UFUNCTION()
 		void DropWrench();
 
+	UFUNCTION(BlueprintImplementableEvent)
+		void SwingWrench();
+	void SwingWrench_Implementable() { };
+
 
 protected:
 	// Called when the game starts or when spawned

@@ -189,6 +189,8 @@ void AFrontierJamCharacter::UpgradeThisMachine(AWashingMachine* MachineToUpgrade
 void AFrontierJamCharacter::FixThisMachine(AWashingMachine* MachineToFix)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Attempting to Fix this machine"));
+	if (IsValid(WrenchRef)) WrenchRef->SwingWrench();
+
 	MachineToFix->FixMachine();
 }
 
@@ -196,18 +198,24 @@ void AFrontierJamCharacter::PickupItem(ALaundryBag* Pickup)
 {
 	if (bHasWrench) DropWrench();
 
-	LaundryRef = Pickup;
-	LaundryRef->LaundryMesh->SetSimulatePhysics(false);
-	LaundryRef->AttachToComponent(PickupComponent, FAttachmentTransformRules::SnapToTargetIncludingScale);
-	bHasPickup = true;
+	if (IsValid(Pickup))
+	{
+		LaundryRef = Pickup;
+		LaundryRef->LaundryMesh->SetSimulatePhysics(false);
+		LaundryRef->AttachToComponent(PickupComponent, FAttachmentTransformRules::SnapToTargetIncludingScale);
+		bHasPickup = true;
+	}
 }
 
 void AFrontierJamCharacter::PickupWrench(AWrench* Pickup)
 {
-	WrenchRef = Pickup;
-	WrenchRef->WrenchMesh->SetSimulatePhysics(false);
-	WrenchRef->AttachToComponent(PickupComponent, FAttachmentTransformRules::SnapToTargetIncludingScale);
-	bHasWrench = true;
+	if (IsValid(Pickup))
+	{
+		WrenchRef = Pickup;
+		WrenchRef->WrenchMesh->SetSimulatePhysics(false);
+		WrenchRef->AttachToComponent(PickupComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+		bHasWrench = true;
+	}	
 }
 
 

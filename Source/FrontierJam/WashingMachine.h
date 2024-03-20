@@ -66,6 +66,9 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "MachineProperties|WashCycle")
 		float WashReward_Increase = 10.f;
+	
+	UPROPERTY(VisibleAnywhere, Category = "MachineProperties|WashCycle")
+		bool bWashing;
 
 protected:
 	// Called when the game starts or when spawned
@@ -121,7 +124,6 @@ private:
 	FTimerHandle WashTimer;
 	FTimerDelegate TimerDelegate;
 	float washTimeElapsed;
-	bool bWashing;
 
 	// References to World Objects
 	UShopDayCycle* GameInstanceRef;
