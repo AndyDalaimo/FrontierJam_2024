@@ -202,7 +202,7 @@ void AFrontierJamCharacter::PickupItem(ALaundryBag* Pickup)
 	{
 		LaundryRef = Pickup;
 		LaundryRef->LaundryMesh->SetSimulatePhysics(false);
-		LaundryRef->AttachToComponent(PickupComponent, FAttachmentTransformRules::SnapToTargetIncludingScale);
+		LaundryRef->AttachToComponent(PickupComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 		bHasPickup = true;
 	}
 }
